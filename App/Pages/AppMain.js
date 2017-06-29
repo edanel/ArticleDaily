@@ -1,87 +1,80 @@
 'use strict'
 import React, {Component} from 'react';
-import {StyleSheet, View, StatusBar, Text,Image} from 'react-native';
-import TabNavigator from 'react-native-tab-navigator';
-
+import {StyleSheet, View, StatusBar, Text, Image} from 'react-native';
+// import TabNavigator from 'react-native-tab-navigator';
+import {StackNavigator, TabNavigator} from 'react-navigation';
 const HOME = '首页';
-const HOME_NORMAL = require('../../Images/Tabs/tabs_index_normal.png');
-const HOME_FOCUS = require('../../Images/Tabs/tabs_index_selected.png');
+const HOME_NORMAL = require('../../images/tabs/tabs_index_normal.png');
+const HOME_FOCUS = require('../../images/tabs/tabs_index_selected.png');
 
 const RANDOM = '随机';
-const RANDOM_NORMAL = require('../../Images/Tabs/tabs_random_normal.png');
-const RANDOM_FOCUS = require('../../Images/Tabs/tabs_random_selected.png');
+const RANDOM_NORMAL = require('../../images/tabs/tabs_random_normal.png');
+const RANDOM_FOCUS = require('../../images/tabs/tabs_random_selected.png');
 
-export default class AppMain extends Component{
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedTab: HOME
-    };
-  }
+import DailyScreen from './DailyScreen';
+import RandomScreen from './RandomScreen';
+import DetailScreen from './DetailScreen';
 
-  _renderTabItem(img,selectedImg,tag,childView){
-    return (
-      <TabNavigator.Item
-        selected={this.state.selectedTab === tag}
-        renderIcon =  {() => <Image style = {styles.tabIcon} source = {img} />}
-        renderSelectedIcon= {() => <Image style={styles.tabIcon} source={selectedImg}/>}
-        onPress={() => this.setState({selectedTab: tag})}
-        // title={tag}
-        >
-        {childView}
-      </TabNavigator.Item>
-    );
-  }
-
-  _createChildView(tag) {
-    if (tag === HOME) {
-      return(<View><Text>HOME</Text></View>);
-    }else if (tag === RANDOM) {
-      return(<View><Text>RANDOM</Text></View>);
+const TabsNavigator = TabNavigator({
+  Home: {
+    screen: DailyScreen,
+    navigationOptions: {
+      tabBarIcon: ({tintColor}) => (<Image source={require('../../images/tabs/tabs_index_normal.png')} style={[
+        {
+          tintColor: tintColor
+        },
+        styles.icon
+      ]}/>)
+    }
+  },
+  Random: {
+    screen: RandomScreen,
+    navigationOptions: {
+      tabBarIcon: ({tintColor}) => (<Image source={require('../../images/tabs/tabs_random_normal.png')} style={[
+        {
+          tintColor: tintColor
+        },
+        styles.icon
+      ]}/>)
+    }
+  },
+}, {
+  animationEnabled: false, // 切换页面时不显示动画
+  tabBarPosition: 'bottom', // 显示在底端，android 默认是显示在页面顶端的
+  swipeEnabled: false, // 禁止左右滑动
+  backBehavior: 'none', // 按 back 键是否跳转到第一个 Tab， none 为不跳转
+  tabBarOptions: {
+    activeTintColor: '#262626', // 文字和图片选中颜色
+    inactiveTintColor: '#999', // 文字和图片默认颜色
+    showIcon: true, //显示icon
+    showLabel:false,
+    indicatorStyle: {
+      height: 0
+    },
+    style: {
+      backgroundColor: '#F5F5F5', // TabBar 背景色
+    },
+    labelStyle: {
+      fontSize: 12,
     }
   }
+});
 
-  _renderData(){
-    return(
-      <View style={{flex:1}}>
-        <View style={styles.container}>
-          <Text style={styles.title}>每日一文</Text>
-        </View>
-        <TabNavigator hidesTabTouch={true} style={styles.tab}>
-          {this._renderTabItem(HOME_NORMAL,HOME_FOCUS,HOME,this._createChildView(HOME))}
-          {this._renderTabItem(RANDOM_NORMAL,RANDOM_FOCUS,RANDOM,this._createChildView(RANDOM))}
-        </TabNavigator>
-      </View>
-    )
+const Navigation = StackNavigator({
+  Main: {
+    screen: TabsNavigator
+  },
+  Detail: {
+    screen: DetailScreen
   }
-
-  render(){
-    return this._renderData();
-  }
-}
+});
 
 const styles = StyleSheet.create({
-  container:{
-    flexDirection: 'row',
-    paddingLeft: 10,
-    paddingRight: 10,
-    elevation: 8,
-    height:48,
-    backgroundColor: '#fff',//顶部导航条颜色
-    alignItems: 'center'
-  },
-  title: {
-    marginLeft: 10,
-    fontSize: 20,
-    fontWeight: '500'
-  },
-  tab: {
-    height: 52,
-    backgroundColor: '#f5f5f5',//内容显示块颜色
-    alignItems: 'center'
-  },
-  tabIcon:{
-    width:24,
-    height:24
+  icon: {
+    height: 22,
+    width: 22,
+    resizeMode: 'contain'
   }
-})
+});
+
+export default Navigation

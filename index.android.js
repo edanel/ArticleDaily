@@ -7,14 +7,6 @@
 import React, {Component} from 'react';
 import {AppRegistry} from 'react-native';
 
+import AppMain from './app/pages/AppMain';
 
-
-import AppMain from './App/Pages/AppMain';
-
-export default class ArticleDaily extends Component {
-  render() {
-    return (<AppMain />);
-  }
-}
-
-AppRegistry.registerComponent('ArticleDaily', () => ArticleDaily);
+AppRegistry.registerComponent('ArticleDaily', () => AppMain);
