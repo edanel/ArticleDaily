@@ -7,7 +7,8 @@ import {
   Image,
   Button,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  RefreshControl
 } from 'react-native';
 import {StackNavigator} from 'react-navigation';
 
@@ -40,11 +41,21 @@ export default class DailyScreen extends Component {
     this._fetchData();
   }
 
+  _onRefresh() {
+  this.setState({isLoading: true});
+  this._fetchData();
+  }
+
   _renderItemView() {
     const {navigate} = this.props.navigation;
 
     return (
-      <ScrollView >
+      <ScrollView refreshControl={
+        <RefreshControl
+            refreshing={this.state.isLoading}
+            onRefresh={this._onRefresh.bind(this)}
+          />
+      }>
 
         <View style={styles.cardView}>
           <Image style={styles.imageStyle} source={{
@@ -54,10 +65,10 @@ export default class DailyScreen extends Component {
 
         <View style={styles.viewItem1}>
 
-          {/* <View style={styles.todatTitleContainer}> */}
+
           <Text style={styles.todayTitle}>{this.state.dataObject.data.title}</Text>
           <Text style={styles.todayAuthor}>{this.state.dataObject.data.author}</Text>
-          {/* </View> */}
+
           <Text style={styles.todayDigest}>{this.state.dataObject.data.digest}  ...</Text>
 
           <View style={styles.readAll}>
@@ -72,20 +83,8 @@ export default class DailyScreen extends Component {
     );
   }
 
-  // _renderData() {
-  //   const {navigate} = this.props.navigation;
-  //   return (
-  //     <ScrollView>
-  //       <AnimatedFlatList data={this.state.dataArray} renderItem={this._renderItemView}/>
-  //     </ScrollView>
-  //   );
-  // }
-
   _renderLoadingView() {
-    return (<ActivityIndicator animating={this.state.isLoading} style={[{
-        height: 80
-      }
-    ]} size="large"/>);
+    return (<ActivityIndicator animating={this.state.isLoading} style={styles.aiStyle} size="large"/>);
   }
   _renderErrorView() {
     return (
@@ -96,10 +95,13 @@ export default class DailyScreen extends Component {
   }
 
   render() {
-    if (this.state.isLoading && !this.state.error) {
+    if (this.state.isLoading && !this.state.error && typeof(this.state.dataObject) != "undefined") {
+      return this._renderItemView();
+    }else if (typeof(this.state.dataObject) == "undefined") {
       return this._renderLoadingView();
-    } else if (this.state.error) {
-      return this._renderLoadingView();
+    }
+    else if (this.state.error) {
+      return this._renderErrorView();
     }
     return this._renderItemView();
   }
@@ -184,5 +186,10 @@ const styles = StyleSheet.create({
     marginTop: 15,
     borderRadius: 5,
     height: 300
+  },
+  aiStyle:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
   }
 })
