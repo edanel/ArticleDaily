@@ -28,6 +28,10 @@ react-native run-android
 
 <img src="https://github.com/edanel/ArticleDaily/raw/master/Screenshots/3.png" width="350"/>
 
+<img src="https://github.com/edanel/ArticleDaily/raw/master/Screenshots/ios-1.png" width="350"/>
+
+<img src="https://github.com/edanel/ArticleDaily/raw/master/Screenshots/ios-2.png" width="350"/>
+
 ## 相关
 
 [每日一文](https://meiriyiwen.com/)
