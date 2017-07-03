@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   p:{
     fontWeight: '300',
     fontSize:20,
-    letterSpacing:40,
+    // letterSpacing:40,
     lineHeight:40,
     color:'#3F3F3F'
   }
